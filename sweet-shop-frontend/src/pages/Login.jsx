@@ -1,45 +1,31 @@
 import { useState } from "react";
 import API from "../api";
 
-function Login() {
+export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = async () => {
+  const login = async () => {
+    const form = new FormData();
+    form.append("username", username);
+    form.append("password", password);
+
     try {
-      const form = new FormData();
-      form.append("username", username);
-      form.append("password", password);
-
       const res = await API.post("/auth/login", form);
-
       localStorage.setItem("token", res.data.access_token);
       window.location.href = "/dashboard";
-    } catch (err) {
-      alert("Invalid username or password");
+    } catch {
+      alert("Invalid credentials");
     }
   };
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div className="auth-box">
       <h2>Login</h2>
-
-      <input
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-
-      <button onClick={handleLogin}>Login</button>
+      <input placeholder="Username" onChange={e => setUsername(e.target.value)} />
+      <input type="password" placeholder="Password" onChange={e => setPassword(e.target.value)} />
+      <button onClick={login}>Login</button>
+      <p onClick={() => window.location.href="/register"}>New user? Register</p>
     </div>
   );
 }
-
-export default Login;

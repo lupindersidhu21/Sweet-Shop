@@ -44,6 +44,12 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
     return {"message": "User registered successfully"}
 
 
+@app.get("/api/auth/me")
+def get_me(user: User = Depends(get_current_user)):
+    return {
+        "username": user.username,
+        "is_admin": user.is_admin
+    }
 @app.post("/api/auth/login", response_model=Token)
 def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
